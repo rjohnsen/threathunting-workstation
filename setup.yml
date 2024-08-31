@@ -1,0 +1,81 @@
+- name: Hunter Workstation Setup Routine
+  hosts: localhost
+  tasks:
+    - name: Setup Hostname
+      ansible.builtin.hostname:
+        name: hunter
+
+    - name: Installing common software
+      ansible.builtin.dnf:
+        name:
+          - git
+          - vim
+          - yum-utils
+          - python3-pip
+          - unzip
+          - tar
+          - bzip2
+          - gcc
+          - kernel-headers
+          - kernel-devel
+          - curl
+          - wget
+
+    - name: Add Docker repository
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/centos/docker-ce.repo
+        dest: /etc/yum.repos.d/docker-ce.repo
+        mode: '0644'
+
+    - name: Installing Docker
+      ansible.builtin.dnf:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+
+    - name: Enable Docker
+      ansible.builtin.service:
+        name: docker
+        enabled: true
+
+    - name: Start Docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+
+    - name: Enable SSH
+      ansible.builtin.service:
+        name: sshd
+        enabled: true
+
+    - name: Start SSH
+      ansible.builtin.service:
+        name: sshd
+        state: started
+
+    - name: Adding user hunter
+      ansible.builtin.user:
+        name: hunter
+        password: "$6$wbRe8SmhRl7L89kC$3C0DVYsQOT0rjyTogcltmKZpKBH2poUJBKrj0NEPVnIRX3zR.8r/RbDyrHKFOR6xQebDB5V8XHwjxQpmOdlxK1"
+        shell: /bin/bash
+        groups: wheel
+        append: true
+
+    - name: Disable memory paging and swapping performance on the host to improve performance.
+      ansible.builtin.command: swapoff -a
+      changed_when: true
+
+    - name: Increase the number of memory maps available to OpenSearch.
+      ansible.builtin.lineinfile:
+        line: vm.max_map_count=262144
+        dest: "/etc/sysctl.conf"
+
+    - name: Reload the kernel parameters using sysctl
+      ansible.builtin.command: sysctl -p
+      changed_when: true
+
+    - name: Starting Docker images
+      ansible.builtin.command: docker compose up -d
+      changed_when: true
