@@ -1,6 +1,9 @@
 - name: Hunter Workstation Setup Routine
   hosts: localhost
   tasks:
+    - name: Disable SELinux
+      ansible.posix.selinux:
+      state: disabled
     - name: Setup Hostname
       ansible.builtin.hostname:
         name: hunter
@@ -79,3 +82,7 @@
     - name: Starting Docker images
       ansible.builtin.command: docker compose up -d
       changed_when: true
+
+    - name: Enable SELinux
+      ansible.posix.selinux:
+      state: enabled

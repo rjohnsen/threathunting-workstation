@@ -11,7 +11,4 @@ curl https://raw.githubusercontent.com/rjohnsen/threathunting-workstation/main/h
 curl https://raw.githubusercontent.com/rjohnsen/threathunting-workstation/main/docker-compose.yml -o docker-compose.yml
 
 sed -i "s/REPLACEME/$pass/g" docker-compose.yml
-
-setenforcee 0
 ansible-playbook -c hosts.ini setup.yml
-setenforce 1
