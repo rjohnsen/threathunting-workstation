@@ -1,6 +1,6 @@
 #!/bin/env bash
 
-echo "Threathuning Workstation - Installer"
+echo "Threathunting Workstation - Installer"
 echo "By Roger C.B. Johnsen - www.predefender.com"
 echo ""
 
