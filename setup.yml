@@ -86,3 +86,6 @@
     - name: Enable SELinux
       ansible.posix.selinux:
       state: enabled
+
+    - name: Reboot workstation
+      ansible.builtin.reboot:
