@@ -83,6 +83,3 @@
     - name: Starting Docker images
       ansible.builtin.command: docker compose up -d
       changed_when: true
-
-    - name: Reboot workstation
-      ansible.builtin.reboot:
