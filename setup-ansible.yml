@@ -84,9 +84,5 @@
       ansible.builtin.command: docker compose up -d
       changed_when: true
 
-    - name: Enable SELinux
-      ansible.posix.selinux:
-        state: enabled
-
     - name: Reboot workstation
       ansible.builtin.reboot:
