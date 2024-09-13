@@ -3,7 +3,8 @@
   tasks:
     - name: Disable SELinux
       ansible.posix.selinux:
-      state: disabled
+        state: disabled
+
     - name: Setup Hostname
       ansible.builtin.hostname:
         name: hunter
@@ -85,7 +86,7 @@
 
     - name: Enable SELinux
       ansible.posix.selinux:
-      state: enabled
+        state: enabled
 
     - name: Reboot workstation
       ansible.builtin.reboot:
