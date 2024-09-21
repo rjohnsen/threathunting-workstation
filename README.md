@@ -78,3 +78,50 @@ flowchart LR
     end
  end
  ```
+
+## Upgrading
+
+These are the instructions to update the Docker container installed by the installer script. Run the following steps as _ROOT_ or via ```sudo```.
+
+ ### Updating Alma Linux
+
+```bash
+dnf upgrade
+```
+
+### Updating Docker containers
+
+#### Update all containers
+
+```bash
+docker compose pull
+docker-compose up -d
+```
+
+After commands completes, give it some minutes before trying to reach the hosts in a browser. 
+
+#### Verifying versions after update
+
+##### OpenSearch
+
+In a suitable browser, visit https://localhost:9200, log in and you'll be presented with a JSON object stating the version. Example:
+
+```json
+{
+  "name" : "opensearch-node1",
+  "cluster_name" : "opensearch-cluster",
+  "cluster_uuid" : "N7IOLSfnSFWasG-EoI7IUg",
+  "version" : {
+    "distribution" : "opensearch",
+    "number" : "2.17.0",
+    "build_type" : "tar",
+    "build_hash" : "8586481dc99b1740ca3c7c966aee15ad0fc7b412",
+    "build_date" : "2024-09-13T01:04:14.707418737Z",
+    "build_snapshot" : false,
+    "lucene_version" : "9.11.1",
+    "minimum_wire_compatibility_version" : "7.10.0",
+    "minimum_index_compatibility_version" : "7.0.0"
+  },
+  "tagline" : "The OpenSearch Project: https://opensearch.org/"
+}
+```
