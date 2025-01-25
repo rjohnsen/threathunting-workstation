@@ -20,6 +20,11 @@
         name: "*"
         state: latest
 
+    - name: Install the 'Development tools' package group
+      ansible.builtin.dnf:
+        name: '@Development tools'
+        state: present
+
     - name: Installing common software
       ansible.builtin.dnf:
         name:
@@ -36,7 +41,6 @@
           - kernel-devel
           - curl
           - wget
-          - Development Tools
           - ruby
           - ruby-devel
           - podman
