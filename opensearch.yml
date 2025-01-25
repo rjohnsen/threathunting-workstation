@@ -44,6 +44,28 @@
           - ruby-devel
           - podman
 
+    - name: Enable service podman, and not touch the state
+      ansible.builtin.service:
+        name: podman
+        enabled: yes
+
+    - name: Start service podman, if not started
+      ansible.builtin.service:
+        name: podman
+        state: started
+    
+    - name: Disable memory paging and swapping performance on the host to improve performance.
+      ansible.builtin.command: swapoff -a
+      changed_when: true
+
     - name: Reload the kernel parameters using sysctl
       ansible.builtin.command: sysctl -p
       changed_when: true
+
+    - name: Adding user hunter
+      ansible.builtin.user:
+        name: hunter
+        password: "$6$wbRe8SmhRl7L89kC$3C0DVYsQOT0rjyTogcltmKZpKBH2poUJBKrj0NEPVnIRX3zR.8r/RbDyrHKFOR6xQebDB5V8XHwjxQpmOdlxK1"
+        shell: /bin/bash
+        groups: wheel
+        append: true
