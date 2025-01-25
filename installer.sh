@@ -28,6 +28,8 @@ ansible-galaxy collection install ansible.posix
 # Get installation files
 git clone https://github.com/rjohnsen/threathunting-workstation.git threathunting-workstation
 cd threathunting-workstation/
+git checkout v2
+git pull
 
 # Run Ansible playbook
 ansible-playbook -c hosts.ini opensearch.yml
