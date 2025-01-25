@@ -32,7 +32,6 @@
           - vim
           - yum-utils
           - python3-pip
-          - python3-venv
           - unzip
           - tar
           - bzip2
@@ -44,3 +43,7 @@
           - ruby
           - ruby-devel
           - podman
+
+    - name: Reload the kernel parameters using sysctl
+      ansible.builtin.command: sysctl -p
+      changed_when: true

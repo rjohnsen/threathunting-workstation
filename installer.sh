@@ -26,8 +26,8 @@ ansible-galaxy collection install ansible.posix
 # sed -i "s/REPLACEME/$pass/g" docker-compose.yml
 
 # Get installation files
-git clone https://github.com/rjohnsen/threathunting-workstation.git threathunting-workstation
-cd threathunting-workstation/
+git clone https://github.com/rjohnsen/threathunting-workstation.git workstation
+cd workstation/
 git checkout v2
 git pull
 
