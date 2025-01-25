@@ -43,6 +43,7 @@
           - ruby
           - ruby-devel
           - podman
+          - podman-compose
 
     - name: Enable service podman, and not touch the state
       ansible.builtin.service:
