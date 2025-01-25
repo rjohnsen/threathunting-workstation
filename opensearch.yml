@@ -50,9 +50,19 @@
         name: podman
         enabled: yes
 
+    - name: Enable podman socket, and not touch the state
+      ansible.builtin.service:
+        name: podman.socket
+        enabled: yes
+
     - name: Start service podman, if not started
       ansible.builtin.service:
         name: podman
+        state: started
+
+    - name: Start service podman socket, if not started
+      ansible.builtin.service:
+        name: podman.socket
         state: started
     
     - name: Disable memory paging and swapping performance on the host to improve performance.
