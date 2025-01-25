@@ -69,6 +69,11 @@
       ansible.builtin.command: swapoff -a
       changed_when: true
 
+    - name: Increase the number of memory maps available to OpenSearch.
+      ansible.builtin.lineinfile:
+        line: vm.max_map_count=262144
+        dest: "/etc/sysctl.conf"
+
     - name: Reload the kernel parameters using sysctl
       ansible.builtin.command: sysctl -p
       changed_when: true
@@ -80,3 +85,7 @@
         shell: /bin/bash
         groups: wheel
         append: true
+
+    - name: Starting Podman images
+      ansible.builtin.command: podman-compose up -d
+      changed_when: true
