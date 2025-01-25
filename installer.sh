@@ -21,8 +21,8 @@ git checkout v2
 git pull
 
 # Set password for OpenSearch
-# read -s -p "Enter new OpenSearch Admin password: " pass
-# sed -i "s/REPLACEME/$pass/g" docker-compose.yml
+read -s -p "Enter new OpenSearch Admin password: " pass
+sed -i "s/REPLACEME/$pass/g" docker-compose.yml
 
 # Run Ansible playbook
 ansible-playbook -c hosts.ini opensearch.yml
