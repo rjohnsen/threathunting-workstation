@@ -1,0 +1,41 @@
+- name: Hunter Workstation Setup Routine
+  hosts: localhost
+  tasks:
+    - name: Disable SELinux
+      ansible.posix.selinux:
+        state: disabled
+
+    - name: Setup Hostname
+      ansible.builtin.hostname:
+        name: huntstation
+
+    - name: Enable and start SSH
+      ansible.builtin.service:
+        name: sshd
+        enabled: true
+        state: started
+
+    - name: Upgrade all packages
+      dnf:
+        name: "*"
+        state: latest
+
+    - name: Installing common software
+      ansible.builtin.dnf:
+        name:
+          - git
+          - vim
+          - yum-utils
+          - python3-pip
+          - unzip
+          - tar
+          - bzip2
+          - gcc
+          - kernel-headers
+          - kernel-devel
+          - curl
+          - wget
+          - Development Tools
+          - ruby
+          - ruby-devel
+          - podman
