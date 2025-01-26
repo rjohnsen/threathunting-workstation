@@ -89,3 +89,47 @@
     - name: Starting Podman images
       ansible.builtin.command: podman-compose up -d
       changed_when: true
+
+    - name: Generating systemd file for machine opensearch-node1
+      ansible.builtin.command: podman generate systemd --new --files --name opensearch-node1
+      changed_when: true
+
+    - name: Generating systemd file for machine opensearch-node2
+      ansible.builtin.command: podman generate systemd --new --files --name opensearch-node2
+      changed_when: true
+
+    - name: Generating systemd file for machine opensearch-dashboards
+      ansible.builtin.command: podman generate systemd --new --files --name opensearch-dashboards
+      changed_when: true
+
+    - name: Stopping machine opensearch-node1
+      ansible.builtin.command: podman stop opensearch-node1
+      changed_when: true
+
+    - name: Stopping machine opensearch-node2
+      ansible.builtin.command: podman stop opensearch-node2
+      changed_when: true
+
+    - name: Stopping machine opensearch-dashboards
+      ansible.builtin.command: podman stop opensearch-dashboards
+      changed_when: true
+
+    - name: Cleaning podman volumes
+      ansible.builtin.command: podman rm -a && podman volume prune
+      changed_when: true
+
+    - name: Moving services files
+      ansible.builtin.command: mv *.service /etc/systemd/system/
+      changed_when: true
+
+    - name: Reloading services
+      ansible.builtin.command: systemctl daemon-reload
+      changed_when: true
+
+    - name: Reloading services
+      ansible.builtin.command: systemctl enable opensearch-node1.service; systemctl enable opensearch-node2.service; systemctl enable opensearch-dashboards.service
+      changed_when: true
+
+    - name: Enable SELinux
+      ansible.posix.selinux:
+        state: enabled
