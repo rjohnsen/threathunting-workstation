@@ -25,4 +25,4 @@ read -s -p "Enter new OpenSearch Admin password: " pass
 sed -i "s/REPLACEME/$pass/g" docker-compose.yml
 
 # Run Ansible playbook
-ansible-playbook -c hosts.ini opensearch.yml
+ansible-playbook -c hosts.ini opensearch-rpm.yml

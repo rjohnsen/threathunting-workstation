@@ -15,19 +15,30 @@
         enabled: true
         state: started
 
+    - name: Import OpenSearch PGP Key
+      ansible.builtin.rpm_key:
+        state: present
+        key: https://artifacts.opensearch.org/publickeys/opensearch.pgp
+
+    - name: Add OpenSearch repository
+      ansible.builtin.yum_repository:
+        name: OpenSearch
+        description: OpenSearch reposiotry
+        baseurl: https://artifacts.opensearch.org/releases/bundle/opensearch/2.x/opensearch-2.x.repo
+
     - name: Upgrade all packages
       dnf:
         name: "*"
         state: latest
 
-    - name: Install the 'Development tools' package group
-      ansible.builtin.dnf:
-        name: '@Development tools'
-        state: present
+    - name: Cleaning Yum
+      ansible.builtin.command: yum clean all
+      changed_when: true
 
-    - name: Installing common software
+    - name: Installing software
       ansible.builtin.dnf:
         name:
+          - '@Development tools'
           - git
           - vim
           - yum-utils
@@ -42,29 +53,9 @@
           - wget
           - ruby
           - ruby-devel
-          - podman
-          - podman-compose
+          - opensearch
+          - opensearch-dashboards
 
-    - name: Enable service podman, and not touch the state
-      ansible.builtin.service:
-        name: podman
-        enabled: yes
-
-    - name: Enable podman socket, and not touch the state
-      ansible.builtin.service:
-        name: podman.socket
-        enabled: yes
-
-    - name: Start service podman, if not started
-      ansible.builtin.service:
-        name: podman
-        state: started
-
-    - name: Start service podman socket, if not started
-      ansible.builtin.service:
-        name: podman.socket
-        state: started
-    
     - name: Disable memory paging and swapping performance on the host to improve performance.
       ansible.builtin.command: swapoff -a
       changed_when: true
@@ -100,22 +91,6 @@
 
     - name: Creating logstash logstash.conf file
       ansible.builtin.command: cp logstash.conf /usr/share/logstash/logstash.conf
-      changed_when: true
-
-    - name: Downloading repository file
-      ansible.builtin.command: curl -SL https://artifacts.opensearch.org/releases/bundle/opensearch/2.x/opensearch-2.x.repo -o /etc/yum.repos.d/opensearch-2.x.repo
-      changed_when: true
-
-    - name: Cleaning Yum
-      ansible.builtin.command: yum clean all
-      changed_when: true
-
-    - name: Install Opensearch
-      ansible.builtin.command: yum install opensearch 
-      changed_when: true
-
-    - name: Install Opensearch Dashboards
-      ansible.builtin.command: yum install opensearch-dashboards
       changed_when: true
 
     - name: Enable Opensearch
