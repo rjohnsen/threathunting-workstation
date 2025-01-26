@@ -123,7 +123,15 @@
       changed_when: true
 
     - name: Moving services files
-      ansible.builtin.command: mv *.service /etc/systemd/system/
+      ansible.builtin.command: mv container-opensearch-dashboards.service /etc/systemd/system/
+      changed_when: true
+
+    - name: Moving services files
+      ansible.builtin.command: mv container-opensearch-node1.service /etc/systemd/system/
+      changed_when: true
+
+    - name: Moving services files
+      ansible.builtin.command: mv container-opensearch-node2.service /etc/systemd/system/
       changed_when: true
 
     - name: Reloading services
