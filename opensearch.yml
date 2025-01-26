@@ -122,15 +122,15 @@
       ansible.builtin.command: podman volume prune -f
       changed_when: true
 
-    - name: Moving services files
+    - name: Moving service file container-opensearch-dashboards.service
       ansible.builtin.command: mv container-opensearch-dashboards.service /etc/systemd/system/
       changed_when: true
 
-    - name: Moving services files
+    - name: Moving service file container-opensearch-node1.service
       ansible.builtin.command: mv container-opensearch-node1.service /etc/systemd/system/
       changed_when: true
 
-    - name: Moving services files
+    - name: Moving service file container-opensearch-node2.service
       ansible.builtin.command: mv container-opensearch-node2.service /etc/systemd/system/
       changed_when: true
 
@@ -138,18 +138,14 @@
       ansible.builtin.command: systemctl daemon-reload
       changed_when: true
 
-    - name: Reloading services
+    - name: Reloading service container-opensearch-node1
       ansible.builtin.command: systemctl enable container-opensearch-node1.service
       changed_when: true
 
-    - name: Reloading services
-      ansible.builtin.command: systemctl enable container-opensearch-node2.service; systemctl enable container-opensearch-dashboards.service
+    - name: Reloading service container-opensearch-node2
+      ansible.builtin.command: systemctl enable container-opensearch-node2.service
       changed_when: true
 
-    - name: Reloading services
+    - name: Reloading service container-opensearch-dashboards
       ansible.builtin.command: systemctl enable container-opensearch-dashboards.service
       changed_when: true
-
-    - name: Enable SELinux
-      ansible.posix.selinux:
-        state: enabled
