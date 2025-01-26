@@ -15,21 +15,23 @@
         enabled: true
         state: started
 
-    - name: Import OpenSearch PGP Key
-      ansible.builtin.rpm_key:
-        state: present
-        key: https://artifacts.opensearch.org/publickeys/opensearch.pgp
+    # - name: Import OpenSearch PGP Key
+    #  ansible.builtin.rpm_key:
+    #    state: present
+    #    key: https://artifacts.opensearch.org/publickeys/opensearch.pgp
 
     - name: Add OpenSearch repository
       ansible.builtin.yum_repository:
         name: OpenSearch
         description: OpenSearch reposiotry
         baseurl: https://artifacts.opensearch.org/releases/bundle/opensearch/2.x/opensearch-2.x.repo
+        disable_gpg_check: yes
 
     - name: Upgrade all packages
       dnf:
         name: "*"
         state: latest
+        disable_gpg_check: yes
 
     - name: Cleaning Yum
       ansible.builtin.command: yum clean all
@@ -37,6 +39,7 @@
 
     - name: Installing software
       ansible.builtin.dnf:
+        disable_gpg_check: yes
         name:
           - '@Development tools'
           - git
