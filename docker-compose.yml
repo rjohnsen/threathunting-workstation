@@ -2,6 +2,7 @@ version: "3.8" # Specify the Docker Compose file version
 volumes:
   opensearch-data1:
   opensearch-data2:
+  logstash-logs:
 
 services:
   opensearch-node1:
