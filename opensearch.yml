@@ -102,6 +102,10 @@
       ansible.builtin.command: podman generate systemd --new --files --name opensearch-dashboards
       changed_when: true
 
+    - name: Generating systemd file for machine opensearch-logstash
+      ansible.builtin.command: podman generate systemd --new --files --name opensearch-logstash
+      changed_when: true
+
     - name: Stopping machine opensearch-node1
       ansible.builtin.command: podman stop opensearch-node1
       changed_when: true
@@ -114,6 +118,9 @@
       ansible.builtin.command: podman stop opensearch-dashboards
       changed_when: true
 
+    - name: Stopping machine opensearch-logstash
+      ansible.builtin.command: podman stop opensearch-logstash
+      changed_when: true
     - name: Cleaning Podman containers
       ansible.builtin.command: podman rm -a
       changed_when: true
@@ -134,6 +141,10 @@
       ansible.builtin.command: mv container-opensearch-node2.service /etc/systemd/system/
       changed_when: true
 
+    - name: Moving service file container-opensearch-logstash.service
+      ansible.builtin.command: mv container-opensearch-logstash.service /etc/systemd/system/
+      changed_when: true
+
     - name: Reloading services
       ansible.builtin.command: systemctl daemon-reload
       changed_when: true
@@ -148,4 +159,8 @@
 
     - name: Reloading service container-opensearch-dashboards
       ansible.builtin.command: systemctl enable container-opensearch-dashboards.service
+      changed_when: true
+
+    - name: Reloading service container-opensearch-logstash
+      ansible.builtin.command: systemctl enable container-opensearch-logstash.service
       changed_when: true

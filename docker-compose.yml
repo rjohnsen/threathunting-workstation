@@ -66,5 +66,15 @@ services:
       OPENSEARCH_HOSTS: '["https://opensearch-node1:9200","https://opensearch-node2:9200"]' # Define the OpenSearch nodes that OpenSearch Dashboards will query
     networks:
       - threathernet
+  opensearch-logstash:
+    restart: always
+    image: docker.elastic.co/logstash/logstash:8.16.3
+    container-name: opensearch-logstash
+    networks:
+      - threathernet
+    environment:
+      - LS_JAVA_OPTS=-Xms512m -Xmx512m
+     ports:
+      - 9600:9600
 networks:
   threathernet:
