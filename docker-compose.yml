@@ -77,13 +77,11 @@ services:
     restart: always
     environment:
       - LS_JAVA_OPTS=-Xms512m -Xmx512m
-    ports:
-      - 9600:9600
     networks:
       - threathernet
     volumes:
       - logstash-logs:/usr/share/logstash/logs
-      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+      - /usr/share/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
 
 networks:
   threathernet:
