@@ -15,17 +15,23 @@
         enabled: true
         state: started
 
-    # - name: Import OpenSearch PGP Key
-    #  ansible.builtin.rpm_key:
-    #    state: present
-    #    key: https://artifacts.opensearch.org/publickeys/opensearch.pgp
+    - name: Enable SHA1
+      ansible.builtin.command: update-crypto-policies --set DEFAULT:SHA1
+      changed_when: true
+
+    - name: Import OpenSearch PGP Key
+      ansible.builtin.rpm_key:
+        state: present
+        key: https://artifacts.opensearch.org/publickeys/opensearch.pgp
 
     - name: Add OpenSearch repository
-      ansible.builtin.yum_repository:
-        name: OpenSearch
-        description: OpenSearch reposiotry
-        baseurl: https://artifacts.opensearch.org/releases/bundle/opensearch/2.x/opensearch-2.x.repo
+      ansible.builtin.command: curl -SL https://artifacts.opensearch.org/releases/bundle/opensearch/2.x/opensearch-2.x.repo -o /etc/yum.repos.d/opensearch-2.x.repo
+      changed_when: true
 
+    - name: Add OpenSearch repository
+      ansible.builtin.command: curl -SL https://artifacts.opensearch.org/releases/bundle/opensearch/2.x/opensearch-2.x.repo -o /etc/yum.repos.d/opensearch-2.x.repo
+      changed_when: true
+      
     - name: Upgrade all packages
       dnf:
         name: "*"
