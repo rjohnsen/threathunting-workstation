@@ -28,6 +28,10 @@
       ansible.builtin.command: curl -SL https://artifacts.opensearch.org/releases/bundle/opensearch/2.x/opensearch-2.x.repo -o /etc/yum.repos.d/opensearch-2.x.repo
       changed_when: true
 
+    - name: Add OpenSearch Dashboards repository
+      ansible.builtin.command: curl -SL https://artifacts.opensearch.org/releases/bundle/opensearch-dashboards/2.x/opensearch-dashboards-2.x.repo -o /etc/yum.repos.d/opensearch-dashboards-2.x.repo
+      changed_when: true
+
     - name: Add OpenSearch repository
       ansible.builtin.command: curl -SL https://artifacts.opensearch.org/releases/bundle/opensearch/2.x/opensearch-2.x.repo -o /etc/yum.repos.d/opensearch-2.x.repo
       changed_when: true
