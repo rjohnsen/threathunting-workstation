@@ -94,8 +94,12 @@
       ansible.builtin.command: mkdir /usr/share/logstash/logs
       changed_when: true
 
+    - name: Creating logstash ndjson logs folder
+      ansible.builtin.command: mkdir /usr/share/logstash/logs/ndjson
+      changed_when: true
+
     - name: Creating logstash logstash.conf file
-      ansible.builtin.command: touch /usr/share/logstash/logstash.conf
+      ansible.builtin.command: cp logstash.conf /usr/share/logstash/logstash.conf
       changed_when: true
 
     - name: Starting Podman images
