@@ -67,11 +67,11 @@
           - ruby-devel
 
     - name: Install OpenSearch
-      ansible.builtin.command: env OPENSEARCH_INITIAL_ADMIN_PASSWORD=opensearch yum install opensearch
+      ansible.builtin.command: env OPENSEARCH_INITIAL_ADMIN_PASSWORD=opensearch yum install opensearch -y
       changed_when: true
 
     - name: Install OpenSearch Dashboards
-      ansible.builtin.command: yum install opensearch-dashboards
+      ansible.builtin.command: yum install opensearch-dashboards -y
       changed_when: true
 
     - name: Disable memory paging and swapping performance on the host to improve performance.
