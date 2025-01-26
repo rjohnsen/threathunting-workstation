@@ -1,0 +1,139 @@
+- name: Hunter Workstation Setup Routine
+  hosts: localhost
+  tasks:
+    - name: Disable SELinux
+      ansible.posix.selinux:
+        state: disabled
+
+    - name: Setup Hostname
+      ansible.builtin.hostname:
+        name: huntstation
+
+    - name: Enable and start SSH
+      ansible.builtin.service:
+        name: sshd
+        enabled: true
+        state: started
+
+    - name: Upgrade all packages
+      dnf:
+        name: "*"
+        state: latest
+
+    - name: Install the 'Development tools' package group
+      ansible.builtin.dnf:
+        name: '@Development tools'
+        state: present
+
+    - name: Installing common software
+      ansible.builtin.dnf:
+        name:
+          - git
+          - vim
+          - yum-utils
+          - python3-pip
+          - unzip
+          - tar
+          - bzip2
+          - gcc
+          - kernel-headers
+          - kernel-devel
+          - curl
+          - wget
+          - ruby
+          - ruby-devel
+          - podman
+          - podman-compose
+
+    - name: Enable service podman, and not touch the state
+      ansible.builtin.service:
+        name: podman
+        enabled: yes
+
+    - name: Enable podman socket, and not touch the state
+      ansible.builtin.service:
+        name: podman.socket
+        enabled: yes
+
+    - name: Start service podman, if not started
+      ansible.builtin.service:
+        name: podman
+        state: started
+
+    - name: Start service podman socket, if not started
+      ansible.builtin.service:
+        name: podman.socket
+        state: started
+    
+    - name: Disable memory paging and swapping performance on the host to improve performance.
+      ansible.builtin.command: swapoff -a
+      changed_when: true
+
+    - name: Increase the number of memory maps available to OpenSearch.
+      ansible.builtin.lineinfile:
+        line: vm.max_map_count=262144
+        dest: "/etc/sysctl.conf"
+
+    - name: Reload the kernel parameters using sysctl
+      ansible.builtin.command: sysctl -p
+      changed_when: true
+
+    - name: Adding user hunter
+      ansible.builtin.user:
+        name: hunter
+        password: "$6$wbRe8SmhRl7L89kC$3C0DVYsQOT0rjyTogcltmKZpKBH2poUJBKrj0NEPVnIRX3zR.8r/RbDyrHKFOR6xQebDB5V8XHwjxQpmOdlxK1"
+        shell: /bin/bash
+        groups: wheel
+        append: true
+
+    - name: Creating logstash folder
+      ansible.builtin.command: mkdir /usr/share/logstash
+      changed_when: true
+
+    - name: Creating logstash logs folder
+      ansible.builtin.command: mkdir /usr/share/logstash/logs
+      changed_when: true
+
+    - name: Creating logstash ndjson logs folder
+      ansible.builtin.command: mkdir /usr/share/logstash/logs/ndjson
+      changed_when: true
+
+    - name: Creating logstash logstash.conf file
+      ansible.builtin.command: cp logstash.conf /usr/share/logstash/logstash.conf
+      changed_when: true
+
+    - name: Downloading repository file
+      ansible.builtin.command: curl -SL https://artifacts.opensearch.org/releases/bundle/opensearch/2.x/opensearch-2.x.repo -o /etc/yum.repos.d/opensearch-2.x.repo
+      changed_when: true
+
+    - name: Cleaning Yum
+      ansible.builtin.command: yum clean all
+      changed_when: true
+
+    - name: Install Opensearch
+      ansible.builtin.command: yum install opensearch 
+      changed_when: true
+
+    - name: Install Opensearch Dashboards
+      ansible.builtin.command: yum install opensearch-dashboards
+      changed_when: true
+
+    - name: Enable Opensearch
+      ansible.builtin.command: systemctl enable opensearch
+      changed_when: true
+
+    - name: Start Opensearch
+      ansible.builtin.command: systemctl start opensearch
+      changed_when: true
+      
+    - name: Enable Opensearch Dashboards
+      ansible.builtin.command: systemctl enable opensearch-dashboards
+      changed_when: true
+
+    - name: Start Opensearch Dashboards
+      ansible.builtin.command: systemctl start opensearch-dashboards
+      changed_when: true
+      
+
+      
+  
