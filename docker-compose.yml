@@ -81,6 +81,9 @@ services:
       - 9600:9600
     networks:
       - threathernet
+    volumes:
+      - logstash-logs:/usr/share/logstash/logs
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
 
 networks:
   threathernet:
