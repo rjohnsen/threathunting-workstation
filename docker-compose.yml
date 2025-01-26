@@ -1,96 +1,86 @@
-- name: Deploy OpenSearch Cluster with Docker
-  hosts: localhost
-  tasks:
-    - name: Define Docker volumes
-      community.docker.docker_volume:
-        name: "{{ item }}"
-      loop:
-        - opensearch-data1
-        - opensearch-data2
+version: "3.8" # Specify the Docker Compose file version
+volumes:
+  opensearch-data1:
+  opensearch-data2:
 
-    - name: Define Docker network
-      community.docker.docker_network:
-        name: threathernet
+services:
+  opensearch-node1:
+    image: docker.io/opensearchproject/opensearch:latest
+    container_name: opensearch-node1
+    restart: always
+    environment:
+      - cluster.name=opensearch-cluster
+      - node.name=opensearch-node1
+      - discovery.seed_hosts=opensearch-node1,opensearch-node2
+      - cluster.initial_cluster_manager_nodes=opensearch-node1,opensearch-node2
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=REPLACEME
+      - indices.query.bool.max_clause_count=4096
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - opensearch-data1:/usr/share/opensearch/data
+    ports:
+      - 9200:9200
+      - 9600:9600
+    networks:
+      - threathernet
 
-    - name: Deploy OpenSearch Node 1
-      community.docker.docker_container:
-        name: opensearch-node1
-        image: docker.io/opensearchproject/opensearch:latest
-        restart_policy: always
-        environment:
-          cluster.name: opensearch-cluster
-          node.name: opensearch-node1
-          discovery.seed_hosts: opensearch-node1,opensearch-node2
-          cluster.initial_cluster_manager_nodes: opensearch-node1,opensearch-node2
-          bootstrap.memory_lock: "true"
-          OPENSEARCH_JAVA_OPTS: "-Xms512m -Xmx512m"
-          OPENSEARCH_INITIAL_ADMIN_PASSWORD: "REPLACEME"
-          indices.query.bool.max_clause_count: "4096"
-        ulimits:
-          - name: memlock
-            soft: -1
-            hard: -1
-          - name: nofile
-            soft: 65536
-            hard: 65536
-        volumes:
-          - opensearch-data1:/usr/share/opensearch/data
-        ports:
-          - 9200:9200
-          - 9600:9600
-        networks:
-          - name: threathernet
+  opensearch-node2:
+    image: docker.io/opensearchproject/opensearch:latest
+    container_name: opensearch-node2
+    restart: always
+    environment:
+      - cluster.name=opensearch-cluster
+      - node.name=opensearch-node2
+      - discovery.seed_hosts=opensearch-node1,opensearch-node2
+      - cluster.initial_cluster_manager_nodes=opensearch-node1,opensearch-node2
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=REPLACEME
+      - indices.query.bool.max_clause_count=8192
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - opensearch-data2:/usr/share/opensearch/data
+    ports:
+      - 9201:9201
+      - 9601:9601
+    networks:
+      - threathernet
 
-    - name: Deploy OpenSearch Node 2
-      community.docker.docker_container:
-        name: opensearch-node2
-        image: docker.io/opensearchproject/opensearch:latest
-        restart_policy: always
-        environment:
-          cluster.name: opensearch-cluster
-          node.name: opensearch-node2
-          discovery.seed_hosts: opensearch-node1,opensearch-node2
-          cluster.initial_cluster_manager_nodes: opensearch-node1,opensearch-node2
-          bootstrap.memory_lock: "true"
-          OPENSEARCH_JAVA_OPTS: "-Xms512m -Xmx512m"
-          OPENSEARCH_INITIAL_ADMIN_PASSWORD: "REPLACEME"
-          indices.query.bool.max_clause_count: "8192"
-        ulimits:
-          - name: memlock
-            soft: -1
-            hard: -1
-          - name: nofile
-            soft: 65536
-            hard: 65536
-        volumes:
-          - opensearch-data2:/usr/share/opensearch/data
-        networks:
-          - name: threathernet
+  opensearch-dashboards:
+    image: docker.io/opensearchproject/opensearch-dashboards:latest
+    container_name: opensearch-dashboards
+    restart: always
+    ports:
+      - 5601:5601
+    environment:
+      OPENSEARCH_HOSTS: '["https://opensearch-node1:9200", "https://opensearch-node2:9200"]'
+    networks:
+      - threathernet
 
-    - name: Deploy OpenSearch Dashboards
-      community.docker.docker_container:
-        name: opensearch-dashboards
-        image: docker.io/opensearchproject/opensearch-dashboards:latest
-        restart_policy: always
-        ports:
-          - 5601:5601
-        expose:
-          - 5601
-        environment:
-          OPENSEARCH_HOSTS: '["https://opensearch-node1:9200", "https://opensearch-node2:9200"]'
-        networks:
-          - name: threathernet
+  opensearch-logstash:
+    image: docker.io/opensearchproject/logstash-oss-with-opensearch-output-plugin:8.9.0
+    container_name: opensearch-logstash
+    restart: always
+    environment:
+      - LS_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - 9600:9600
+    networks:
+      - threathernet
 
-    - name: Deploy OpenSearch Logstash
-      community.docker.docker_container:
-        name: opensearch-logstash
-        image: docker.io/opensearchproject/logstash-oss-with-opensearch-output-plugin:8.9.0
-        restart_policy: always
-        environment:
-          LS_JAVA_OPTS: "-Xms512m -Xmx512m"
-        ports:
-          - 9600:9600
-        expose:
-          - 9600
-        networks:
-          - name: threathernet
+networks:
+  threathernet:
