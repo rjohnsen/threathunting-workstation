@@ -139,7 +139,15 @@
       changed_when: true
 
     - name: Reloading services
-      ansible.builtin.command: systemctl enable container-opensearch-node1.service; systemctl enable container-opensearch-node2.service; systemctl enable container-opensearch-dashboards.service
+      ansible.builtin.command: systemctl enable container-opensearch-node1.service
+      changed_when: true
+
+    - name: Reloading services
+      ansible.builtin.command: systemctl enable container-opensearch-node2.service; systemctl enable container-opensearch-dashboards.service
+      changed_when: true
+
+    - name: Reloading services
+      ansible.builtin.command: systemctl enable container-opensearch-dashboards.service
       changed_when: true
 
     - name: Enable SELinux
