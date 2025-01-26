@@ -25,7 +25,6 @@
         name: OpenSearch
         description: OpenSearch reposiotry
         baseurl: https://artifacts.opensearch.org/releases/bundle/opensearch/2.x/opensearch-2.x.repo
-        disable_gpg_check: yes
 
     - name: Upgrade all packages
       dnf:
