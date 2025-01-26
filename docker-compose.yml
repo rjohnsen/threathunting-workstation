@@ -1,4 +1,3 @@
----
 - name: Deploy OpenSearch Cluster with Docker
   hosts: localhost
   tasks:
