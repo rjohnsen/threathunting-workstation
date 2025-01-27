@@ -65,9 +65,10 @@
           - wget
           - ruby
           - ruby-devel
+          - openssl
 
     - name: Install OpenSearch
-      ansible.builtin.command: env OPENSEARCH_INITIAL_ADMIN_PASSWORD=opensearch yum install opensearch -y
+      ansible.builtin.command: env OPENSEARCH_INITIAL_ADMIN_PASSWORD=opensearch yum install opensearch
       changed_when: true
 
     - name: Install OpenSearch Dashboards
