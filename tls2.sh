@@ -77,4 +77,3 @@ echo "plugins.security.nodes_dn:" | sudo tee -a /etc/opensearch/opensearch.yml
 echo "  - 'CN=node1.dns.a-record,OU=UNIT,O=ORG,L=OSLO,ST=OSLO,C=CA'" | sudo tee -a /etc/opensearch/opensearch.yml
 echo "  - 'CN=node2.dns.a-record,OU=UNIT,O=ORG,L=OSLO,ST=OSLO,C=CA'" | sudo tee -a /etc/opensearch/opensearch.yml
 echo "discovery.type: single-node" | sudo tee -a /etc/opensearch/opensearch.yml
-"
