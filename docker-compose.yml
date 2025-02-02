@@ -87,7 +87,7 @@ services:
         - ./pipelines.yaml:/usr/share/data-prepper/pipelines.yaml
       networks:
         - threathernet
-    watcher:
+  watcher:
       image: alpine
       container_name: watcher
       volumes:
