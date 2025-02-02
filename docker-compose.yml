@@ -83,6 +83,6 @@ services:
     ports:
       - 2021:2021
     networks:
-      - opensearch-net
+      - threathernet
 networks:
   threathernet:
