@@ -1,0 +1,78 @@
+- name: Hunter Workstation Setup Routine
+  hosts: localhost
+  tasks:
+    - name: Setup Hostname
+      ansible.builtin.hostname:
+        name: huntstation
+
+    - name: Enable and start SSH
+      ansible.builtin.service:
+        name: ssh
+        enabled: true
+        state: started
+
+    - name: Create keyrings directory
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: "0755"
+
+    - name: Download Docker GPG key
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: "0644"
+
+    - name: Add Docker repository
+      ansible.builtin.shell: |
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" > /etc/apt/sources.list.d/docker.list
+
+    - name: Run "apt-get update"
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Installing common software
+      ansible.builtin.apt:
+        name:
+          - ca-certificates
+          - git
+          - vim
+          - python3-pip
+          - unzip
+          - tar
+          - bzip2
+          - gcc
+          - wget
+          - ruby
+          - ruby-dev
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+        
+    - name: Enable Docker
+      ansible.builtin.service:
+        name: docker
+        enabled: true
+
+    - name: Start Docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+
+    - name: Disable memory paging and swapping on the host
+      ansible.builtin.command: swapoff -a
+      changed_when: true
+
+    - name: Increase the number of memory maps available to OpenSearch
+      ansible.builtin.lineinfile:
+        path: /etc/sysctl.conf
+        line: vm.max_map_count=262144
+        create: true
+
+    - name: Reload the kernel parameters using sysctl
+      ansible.builtin.command: sysctl -p
+      changed_when: true
+

@@ -1,4 +1,5 @@
-version: "3.8" # Specify the Docker Compose file version
+version: "3.8"
+
 volumes:
   opensearch-data1:
   opensearch-data2:
@@ -16,7 +17,6 @@ services:
       - cluster.initial_cluster_manager_nodes=opensearch-node1,opensearch-node2
       - bootstrap.memory_lock=true
       - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
-      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=REPLACEME
       - indices.query.bool.max_clause_count=4096
     ulimits:
       memlock:
@@ -31,7 +31,8 @@ services:
       - 9200:9200
       - 9600:9600
     networks:
-      - threathernet
+      threathernet:
+        ipv4_address: 192.168.100.10
 
   opensearch-node2:
     image: docker.io/opensearchproject/opensearch:latest
@@ -44,7 +45,6 @@ services:
       - cluster.initial_cluster_manager_nodes=opensearch-node1,opensearch-node2
       - bootstrap.memory_lock=true
       - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
-      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=REPLACEME
       - indices.query.bool.max_clause_count=8192
     ulimits:
       memlock:
@@ -59,7 +59,8 @@ services:
       - 9201:9201
       - 9601:9601
     networks:
-      - threathernet
+      threathernet:
+        ipv4_address: 192.168.100.11
 
   opensearch-dashboards:
     image: docker.io/opensearchproject/opensearch-dashboards:latest
@@ -68,9 +69,10 @@ services:
     ports:
       - 5601:5601
     environment:
-      OPENSEARCH_HOSTS: '["https://opensearch-node1:9200", "https://opensearch-node2:9200"]'
+      OPENSEARCH_HOSTS: '["https://192.168.100.10:9200", "https://192.168.100.11:9200"]'
     networks:
-      - threathernet
+      threathernet:
+        ipv4_address: 192.168.100.12
 
   opensearch-logstash:
     image: docker.io/opensearchproject/logstash-oss-with-opensearch-output-plugin:8.9.0
@@ -79,10 +81,15 @@ services:
     environment:
       - LS_JAVA_OPTS=-Xms512m -Xmx512m
     networks:
-      - threathernet
+      threathernet:
+        ipv4_address: 192.168.100.13
     volumes:
       - logstash-logs:/usr/share/logstash/logs
       - /usr/share/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
 
 networks:
   threathernet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.100.0/24
