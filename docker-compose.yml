@@ -79,7 +79,8 @@ services:
     container_name: data-prepper
     image: opensearchproject/data-prepper:latest
     volumes:
-      -  /opt/predefender/threathunting-workstation/config/log_pipeline.yaml:/usr/share/data-prepper/pipelines/log_pipeline.yaml
+      - /opt/predefender/threathunting-workstation/config/log_pipeline.yaml:/usr/share/data-prepper/pipelines/log_pipeline.yaml
+      - /opt/predefender/logs:/usr/share/data-prepper/logs
     ports:
       - 2021:2021
     networks:

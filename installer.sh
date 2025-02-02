@@ -15,7 +15,6 @@ mkdir /opt/predefender
 mkdir /opt/predefender/logs
 cd /opt/predefender
 
-
 # Get installation files
 git clone https://github.com/rjohnsen/threathunting-workstation.git threathunting-workstation
 cd threathunting-workstation/

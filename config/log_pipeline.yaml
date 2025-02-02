@@ -1,15 +1,21 @@
 log-pipeline:
   source:
-    http:
-      ssl: false
+    file:
+      path: "/usr/share/data-prepper/logs/access.log"
   processor:
     - grok:
         match:
           log: [ "%{COMMONAPACHELOG}" ]
+    - date:
+        match:
+          field: '@timestamp'
+          target_field: '@timestamp'
+          formats:
+            - "dd/Mon/yyyy:HH:mm:ss Z"
   sink:
     - opensearch:
         hosts: [ "https://opensearch-node1:9200" ]
         insecure: true
         username: admin
         password: Opensearch1234!!!!
-        index: nginx_logs
+        index: apache-logs
