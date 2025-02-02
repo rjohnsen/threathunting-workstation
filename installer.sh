@@ -15,7 +15,9 @@ sudo ansible-galaxy collection install ansible.posix
 
 # Make room for predefender tools
 mkdir /opt/predefender
+mkdir /opt/predefender/logs
 cd /opt/predefender
+
 
 # Get installation files
 git clone https://github.com/rjohnsen/threathunting-workstation.git threathunting-workstation
@@ -28,3 +30,5 @@ sed -i "s/REPLACEME/$pass/g" docker-compose.yml
 
 # Run Ansible playbook
 ansible-playbook -c hosts.ini ubuntu.yml
+
+echo "Please login to https://localhost:9443 (Portainer) and set admin password to finish the installation"
