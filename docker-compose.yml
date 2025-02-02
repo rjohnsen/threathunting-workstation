@@ -24,6 +24,7 @@ services:
       - bootstrap.memory_lock=true # Disable JVM heap memory swapping
       - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m" # Set min and max JVM heap sizes to at least 50% of system RAM
       - indices.query.bool.max_clause_count=4096
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=REPLACEME
     ulimits:
       memlock:
         soft: -1 # Set memlock to unlimited (no soft or hard limit)
@@ -50,6 +51,7 @@ services:
       - bootstrap.memory_lock=true
       - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
       - indices.query.bool.max_clause_count=8192
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=REPLACEME
     ulimits:
       memlock:
         soft: -1

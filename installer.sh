@@ -24,8 +24,7 @@ git checkout v2
 git pull
 
 # Set password for OpenSearch
-touch .env
-echo "OPENSEARCH_INITIAL_ADMIN_PASSWORD=$pass" | tee -a .env
+sed -i "s/REPLACEME/$pass/g" docker-compose.yml
 
 # Run Ansible playbook
 ansible-playbook -c hosts.ini ubuntu.yml
