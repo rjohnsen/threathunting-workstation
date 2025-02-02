@@ -75,5 +75,26 @@ services:
       OPENSEARCH_HOSTS: '["https://opensearch-node1:9200","https://opensearch-node2:9200"]' # Define the OpenSearch nodes that OpenSearch Dashboards will query
     networks:
       - threathernet
+  data-prepper:
+      image: opensearchproject/data-prepper:latest
+      container_name: data-prepper
+      restart: always
+      ports:
+        - "4900:4900"
+        - "8080:8080"
+      volumes:
+        - ./data-prepper-config.yaml:/usr/share/data-prepper/data-prepper-config.yaml
+        - ./pipelines.yaml:/usr/share/data-prepper/pipelines.yaml
+      networks:
+        - threathernet
+    watcher:
+      image: alpine
+      container_name: watcher
+      volumes:
+        - .:/watched
+      command: >
+        sh -c "apk add inotify-tools && 
+              while inotifywait -e modify /watched/data-prepper-config.yaml /watched/pipelines.yaml; 
+              do docker restart data-prepper; done"
 networks:
   threathernet:
