@@ -1,4 +1,4 @@
-pipeline:
+apache-pipeline:
   source:
     file:
       path: "/usr/share/data-prepper/logs/access.log"
@@ -14,3 +14,19 @@ pipeline:
         username: "admin"
         password: "Opensearch1234!!!!"
         index: "apache_logs"
+ndjson-pipeline:
+  source:
+    file:
+      path: "/usr/share/data-prepper/logs/*.ndjson"
+      record_type: "event"
+      codec: newline
+  processor:
+    - parse_json:
+        source: "message"
+  sink:
+    - opensearch:
+        hosts: [ "https://opensearch-node1:9200" ]
+        insecure: true
+        username: "admin"
+        password: "Opensearch1234!!!!"
+        index: "ndjson_logs"
