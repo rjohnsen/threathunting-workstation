@@ -4,6 +4,9 @@ echo "Threathunting Workstation - Installer"
 echo "By Roger C.B. Johnsen - www.predefender.com"
 echo ""
 
+# Get password for OpenSearch
+read -p "Enter new OpenSearch Admin password: " pass
+
 # Install Ansible and Git
 sudo apt install git ansible -y
 
@@ -21,7 +24,6 @@ git checkout v2
 git pull
 
 # Set password for OpenSearch
-read -s -p "Enter new OpenSearch Admin password: " pass
 touch .env
 echo "OPENSEARCH_INITIAL_ADMIN_PASSWORD=$pass" | tee -a .env
 

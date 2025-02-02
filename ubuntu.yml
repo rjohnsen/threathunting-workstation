@@ -51,7 +51,7 @@
           - docker-buildx-plugin
           - docker-compose-plugin
         state: present
-        
+
     - name: Enable Docker
       ansible.builtin.service:
         name: docker
@@ -76,3 +76,6 @@
       ansible.builtin.command: sysctl -p
       changed_when: true
 
+    - name: Starting Docker images
+      ansible.builtin.command: docker compose up -d
+      changed_when: true
