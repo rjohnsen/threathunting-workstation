@@ -125,3 +125,27 @@ In a suitable browser, visit https://localhost:9200, log in and you'll be presen
   "tagline" : "The OpenSearch Project: https://opensearch.org/"
 }
 ```
+
+
+
+
+
+NOTES
+
+The Ubuntu version is based on the following configuration
+
+```bash
+sudo apt-get update && sudo apt-get -y install lsb-release ca-certificates curl gnupg2
+curl -o- https://artifacts.opensearch.org/publickeys/opensearch.pgp | sudo gpg --dearmor --batch --yes -o /usr/share/keyrings/opensearch-keyring
+echo "deb [signed-by=/usr/share/keyrings/opensearch-keyring] https://artifacts.opensearch.org/releases/bundle/opensearch/2.x/apt stable main" | sudo tee /etc/apt/sources.list.d/opensearch-2.x.list
+echo "deb [signed-by=/usr/share/keyrings/opensearch-keyring] https://artifacts.opensearch.org/releases/bundle/opensearch-dashboards/2.x/apt stable main" | sudo tee /etc/apt/sources.list.d/opensearch-dashboards-2.x.list
+sudo apt-get update
+sudo env OPENSEARCH_INITIAL_ADMIN_PASSWORD="Jallafisk1234" apt-get install opensearch
+sudo apt-get install opensearch-dashboards
+sudo echo "server.port: 5601"  | tee -a /etc/opensearch-dashboards/opensearch_dashboards.yml
+sudo echo "server.host: 0.0.0.0" | tee -a /etc/opensearch-dashboards/opensearch_dashboards.yml
+sudo systemctl enable opensearch
+sudo systemctl start opensearch
+sudo systemctl enable opensearch-dashboards
+sudo systemctl start opensearch-dashboards
+```

@@ -4,9 +4,6 @@ echo "Threathunting Workstation - Installer"
 echo "By Roger C.B. Johnsen - www.predefender.com"
 echo ""
 
-# Get password for OpenSearch
-read -p "Enter new OpenSearch Admin password: " pass
-
 # Install Ansible and Git
 sudo apt install git ansible -y
 
@@ -24,9 +21,6 @@ git clone https://github.com/rjohnsen/threathunting-workstation.git threathuntin
 cd threathunting-workstation/
 git checkout v2
 git pull
-
-# Set password for OpenSearch
-sed -i "s/REPLACEME/$pass/g" docker-compose.yml
 
 # Run Ansible playbook
 ansible-playbook -c hosts.ini ubuntu.yml

@@ -24,7 +24,7 @@ services:
       - bootstrap.memory_lock=true # Disable JVM heap memory swapping
       - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m" # Set min and max JVM heap sizes to at least 50% of system RAM
       - indices.query.bool.max_clause_count=4096
-      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=REPLACEME
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=Opensearch1234!!!!
     ulimits:
       memlock:
         soft: -1 # Set memlock to unlimited (no soft or hard limit)
@@ -51,7 +51,7 @@ services:
       - bootstrap.memory_lock=true
       - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
       - indices.query.bool.max_clause_count=8192
-      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=REPLACEME
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=Opensearch1234!!!!
     ulimits:
       memlock:
         soft: -1
@@ -75,5 +75,14 @@ services:
       OPENSEARCH_HOSTS: '["https://opensearch-node1:9200","https://opensearch-node2:9200"]' # Define the OpenSearch nodes that OpenSearch Dashboards will query
     networks:
       - threathernet
+  data-prepper:
+    container_name: data-prepper
+    image: opensearchproject/data-prepper:latest
+    volumes:
+      -  /opt/predefender/threathunting-workstation/config/log_pipeline.yaml:/usr/share/data-prepper/pipelines/log_pipeline.yaml
+    ports:
+      - 2021:2021
+    networks:
+      - opensearch-net
 networks:
   threathernet:
