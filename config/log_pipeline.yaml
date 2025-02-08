@@ -2,11 +2,19 @@ apache-pipeline:
   source:
     file:
       path: "/usr/share/data-prepper/logs/access.log"
-      record_type: "event"
-  processor:
+      record_type: "plain"
+   processor:
     - grok:
         match:
-          log: [ "%{COMMONAPACHELOG}" ]
+          message: 
+            - >-
+              %{IPORHOST:client_ip} %{USER:ident} %{USER:auth} \[%{HTTPDATE:timestamp}\] 
+              "%{WORD:method} %{URIPATHPARAM:request} HTTP/%{NUMBER:http_version}" 
+              %{NUMBER:response_code} (?:%{NUMBER:bytes}|-) 
+              "%{DATA:referer}" "%{DATA:user_agent}"
+    - date:
+        from_time_received: true
+        destination: "@timestamp"
   sink:
     - opensearch:
         hosts: [ "https://opensearch-node1:9200" ]
@@ -20,9 +28,16 @@ ndjson-pipeline:
       path: "/usr/share/data-prepper/logs/*.ndjson"
       record_type: "event"
       codec: newline
-  processor:
-    - parse_json:
-        source: "message"
+processor:
+    - grok:
+        match:
+          message: ["%{GREEDYDATA:message}"]
+    - date:
+        from_time_received: true
+        destination: "@timestamp"
+    - append:
+        - from: "_source"
+          to: "parsed_event"
   sink:
     - opensearch:
         hosts: [ "https://opensearch-node1:9200" ]
