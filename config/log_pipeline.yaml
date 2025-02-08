@@ -1,7 +1,7 @@
 apache-pipeline:
   source:
     file:
-      path: "/opt/predefender/logs/access.log"
+      path: "/usr/share/data-prepper/logs/access.log"
       record_type: "event"
   processor:
     - grok:
