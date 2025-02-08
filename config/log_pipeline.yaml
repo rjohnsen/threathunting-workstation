@@ -1,14 +1,23 @@
 apache-pipeline:
   source:
     file:
-      path: "/usr/share/data-prepper/logs/access.log"
-      record_type: "plain"
+      path: "/opt/predefender/logs/access.log"
+      record_type: "event"
   processor:
     - grok:
-        match: "%{COMMONAPACHELOG}"
+        match:
+          message: [ '%{IPV4:client_ip} - - \[%{HTTPDATE:time}\] "%{WORD:http_request_method} %{URIPATH:http_request_uri_path} HTTP/%{NUMBER:http_version}" %{NUMBER:http_response_status_code} %{NUMBER:http_response_body_bytes} "%{GREEDYDATA:http_url}" "%{GREEDYDATA:http_user_agent}"' ]
+    - date:
+        match:
+          - key: "time"
+            patterns: ["dd/MMM/yyyy:HH:mm:ss Z"]
+        destination: "@timestamp"
+    - date:
+        from_time_received: true
+        destination: "@timestamp_ingested"
   sink:
     - opensearch:
-        hosts: [ "https://opensearch-node1:9200" ]
+        hosts: [ "https://localhost:9200" ]
         insecure: true
         username: "admin"
         password: "Opensearch1234!!!!"
