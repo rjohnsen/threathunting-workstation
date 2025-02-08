@@ -3,7 +3,7 @@ apache-pipeline:
     file:
       path: "/usr/share/data-prepper/logs/access.log"
       record_type: "plain"
-   processor:
+  processor:
     - grok:
         match:
           message: 
@@ -38,7 +38,7 @@ processor:
     - append:
         - from: "_source"
           to: "parsed_event"
-  sink:
+sink:
     - opensearch:
         hosts: [ "https://opensearch-node1:9200" ]
         insecure: true
