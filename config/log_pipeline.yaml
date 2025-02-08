@@ -1,7 +1,7 @@
 apache-pipeline:
   source:
     file:
-      path: "/usr/share/data-prepper/logs/access.log"
+      path: "/opt/predefender/logs/access.log"
       record_type: "plain"
   processor:
     - grok:
@@ -25,7 +25,7 @@ apache-pipeline:
 ndjson-pipeline:
   source:
     file:
-      path: "/usr/share/data-prepper/logs/*.ndjson"
+      path: "/opt/predefender/logs/*.ndjson"
       record_type: "event"
       codec: newline
   processor:
