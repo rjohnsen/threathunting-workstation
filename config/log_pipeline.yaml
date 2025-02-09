@@ -22,3 +22,29 @@ apache-pipeline:
         username: "admin"
         password: "Opensearch1234!!!!"
         index: "apache-logs"
+
+elastic-ndjson-pipeline:
+  source:
+    file:
+      path: "/opt/predefender/logs/HuntingforDiscovery.ndjson"
+      codec:
+        ndjson: {}
+  processor:
+      - select_entries:
+          include_keys: [ "_source" ]
+      - rename_keys:
+          entries:
+              - from_key: "_source"
+                to_key: "docroot"
+  sink:
+    # - stdout:
+    - opensearch:
+        hosts: [ "https://localhost:9200" ]
+        insecure: true
+        username: "admin"
+        password: "Opensearch1234!!!!"
+        index: "ndjson-logs-example"
+        document_root_key: "docroot"
+        dlq_file: /opt/predefender/dlq/dead-entries
+          # flush_timeout: 30000
+          # bulk_size: 15000

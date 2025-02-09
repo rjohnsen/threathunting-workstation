@@ -149,3 +149,37 @@ sudo systemctl start opensearch
 sudo systemctl enable opensearch-dashboards
 sudo systemctl start opensearch-dashboards
 ```
+
+
+
+
+
+## OpenSearch helpfull Dev Tools Queries
+
+Create an index. From test lab I found it necessary to create the index before running ingestion through Data Prepper
+
+```json
+PUT /ndjson-logs-example
+```
+
+Change mapping:
+
+```json
+PUT ndjson-logs-example/_mapping
+{
+  "properties": {
+    "winlog.event_data.param1": {
+      "type": "keyword"
+    }
+  }
+}
+```
+
+Increase total fields limit:
+
+```json
+PUT ndjson-logs-example/_settings
+{
+  "index.mapping.total_fields.limit": 2000
+}
+```

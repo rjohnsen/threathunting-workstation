@@ -1,0 +1,17 @@
+apache-pipeline:
+  source:
+    file:
+      path: "/opt/predefender/logs/access.log"
+      format: "plain"
+      record_type: "event"
+  processor:
+    - grok:
+        match:
+          log: [ "%{COMMONAPACHELOG}" ]
+  sink:
+    - opensearch:
+        hosts: [ "https://opensearch-node1:9200" ]
+        insecure: true
+        username: "admin"
+        password: "Opensearch1234!!!!"
+        index: "apache-logs"
