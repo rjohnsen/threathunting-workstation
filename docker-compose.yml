@@ -85,5 +85,22 @@ services:
       - 2021:2021
     networks:
       - threathernet
+  nats:
+    image: nats:latest
+    ports:
+      - "8222:8222"
+    command: "--cluster_name NATS --cluster nats://0.0.0.0:6222 --http_port 8222 "
+    networks: ["nats"]
+  nats-1:
+    image: nats
+    command: "--cluster_name NATS --cluster nats://0.0.0.0:6222 --routes=nats://ruser:Nats1234!!!!@nats:6222"
+    networks: ["nats"]
+    depends_on: ["nats"]
+  nats-2:
+    image: nats
+    command: "--cluster_name NATS --cluster nats://0.0.0.0:6222 --routes=nats://ruser:Nats1234!!!!@nats:6222"
+    networks: ["nats"]
+    depends_on: ["nats"]
 networks:
   threathernet:
+  nats: 
