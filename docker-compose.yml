@@ -88,19 +88,23 @@ services:
   nats:
     image: nats:latest
     ports:
-      - "8222:8222"
+      - 8222:8222
     command: "--cluster_name NATS --cluster nats://0.0.0.0:6222 --http_port 8222 "
     networks:
       - threathernet
   nats-1:
     image: nats
     command: "--cluster_name NATS --cluster nats://0.0.0.0:6222 --routes=nats://ruser:Nats1234!!!!@nats:6222"
+    ports:
+      - 4222:4222
     networks:
       - threathernet
     depends_on: ["nats"]
   nats-2:
     image: nats
     command: "--cluster_name NATS --cluster nats://0.0.0.0:6222 --routes=nats://ruser:Nats1234!!!!@nats:6222"
+    ports:
+      - 4222:4222
     networks:
       - threathernet
     depends_on: ["nats"]
