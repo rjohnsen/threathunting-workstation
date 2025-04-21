@@ -8,8 +8,8 @@ The Threat Hunting Workstation is a complete toolkit designed to help teams esta
 
 In general, the installation consists of two steps:
 
-1. Install Alma Linux in Virtualbox. Not covered in this installation instruction. 
-2. Install the Threathunting Workstation tools using the script covered in this installation instruction.
+1. Install Ubuntu Linux in Virtualbox. Not covered in this installation instruction. 
+2. Install the Threathunting Workstation using the script covered in this installation instruction.
 
 
 Obtain the installation script:
@@ -40,17 +40,6 @@ The following table displays the communication ports for each intalled service. 
 | OpenSearch REST API | TCP | 9200 |
 | Portainer | TCP | 9443 |
 | SSH | TCP | TCP | 22 |
-| XWiki | TCP | 8080 |
-| Cyberchef | TCP | 8000 |  
-
-### XWiki initial setup
-
-First time reaching XWiki over the web it will kickstart its installer. The installer will guide you through four steps:
-
-1. Admin user - make sure to create a user with administrative right
-2. Flavor - install or update the flavor of this wiki. Make sure to install and use "XWiki Standard Flavor" as presented in the GUI.
-3. Orphaned dependencies - make sure orphaned extension dependencies are either removed or made top level.
-4. Extensions - update the installed extensions
 
 ## Architecture
 
@@ -59,12 +48,10 @@ First time reaching XWiki over the web it will kickstart its installer. The inst
 ```mermaid
 flowchart LR
  B[Virtualbox]
- C[Alma Linux]
+ C[Ubuntu Linux]
  D[Docker]
  E[OpenSearch]
- F[XWiki]
  G[Portainer]
- H[CyberChef]
  I[DFIR-IRIS]
 
  subgraph A[Threathunter Workstation]
@@ -86,16 +73,18 @@ These are the instructions to update the Docker container installed by the insta
  ### Updating Alma Linux
 
 ```bash
-dnf upgrade
+sudo apt-get update
+sudo apt-get upgrade
 ```
 
 ### Updating Docker containers
 
 #### Update all containers
 
+The workstation comes with an updater script for updating the Docker containers. Please run:
+
 ```bash
-docker compose pull
-docker-compose up -d
+sudo update.sh
 ```
 
 After commands completes, give it some minutes before trying to reach the hosts in a browser. 
