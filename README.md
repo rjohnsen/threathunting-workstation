@@ -58,9 +58,6 @@ flowchart LR
     subgraph B[Virtualbox]
         C-->D
         D-->E
-        D-->F
-        D-->G
-        D-->H
         D-. Future .->I
     end
  end
